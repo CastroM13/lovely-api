@@ -23,8 +23,8 @@ export class MediaService {
     return doc;
   }
 
-  async findOneByImdbId(imdbId: string) {
-    const doc = await this.mediaModel.findOne({ imdbId }).exec();
+  async findOneByImdbId(imdbID: string) {
+    const doc = await this.mediaModel.findOne({ imdbID }).exec();
     if (!doc) throw new NotFoundException('Media not found');
     return doc;
   }
@@ -41,13 +41,14 @@ export class MediaService {
     return deleted;
   }
 
-  async addOrUpdateReview(id: string, user: string, review?: string, remark?: number) {
+  async addOrUpdateReview(imdbID: string, user: string, review?: string, remark?: number) {
+    console.log(imdbID, user, review, remark);
     const update: any = {};
     if (review !== undefined) update[`Reviews.${user}`] = review;
     if (remark !== undefined) update[`Remarks.${user}`] = remark;
     if (Object.keys(update).length === 0) throw new Error('No review or remark provided');
-    const updated = await this.mediaModel.findByIdAndUpdate(
-      id,
+    const updated = await this.mediaModel.findOneAndUpdate(
+      { imdbID },
       { $set: update },
       { new: true }
     ).exec();

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Patch, Delete, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, Delete, Req, BadRequestException } from '@nestjs/common';
 import { MediaService } from './media.service';
 import { UserToken } from './interfaces/user-token/user-token.interface';
 
@@ -16,11 +16,6 @@ export class MediaController {
     return this.mediaService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.mediaService.findOne(id);
-  }
-
   @Get(':imdbId')
   findOneByImdbId(@Param('imdbId') imdbId: string) {
     return this.mediaService.findOneByImdbId(imdbId);
@@ -31,14 +26,14 @@ export class MediaController {
     return this.mediaService.update(id, updateDto);
   }
 
-  @Patch(':id/review')
+  @Patch(':imdbID/review')
   async addOrUpdateReview(
-    @Param('id') id: string,
+    @Param('imdbID') imdbID: string,
     @Body('review') review: string,
     @Body('remark') remark: number,
     @Req() req: UserToken
   ) {
-    return this.mediaService.addOrUpdateReview(id, req.user.token, review, remark);
+    return this.mediaService.addOrUpdateReview(imdbID, req.user.token.toLocaleLowerCase(), review, remark);
   }
 
   @Delete(':id')

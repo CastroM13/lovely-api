@@ -6,6 +6,9 @@ export const MediaSchema = new Schema({
   Type: { type: String, required: true },
   Poster: { type: String, required: true },
   imdbID: { type: String, required: true },
+  Timestamp: { type: String, required: false },
+  Ownership: { type: String, required: false },
+  WatchedEpisodes: { type: [String], required: false },
   Remarks: {
     type: Map,
     of: Number,
